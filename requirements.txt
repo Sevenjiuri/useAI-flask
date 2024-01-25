@@ -1,0 +1,2 @@
+google-generativeai
+flask~=3.0.1
