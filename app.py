@@ -25,6 +25,20 @@ def qzGoogle():
         return response
     else:
         return jsonify({"error": "Missing 'content' in the request body"}), 400
+@app.route('/v1/createPic', methods=['POST'])
+def qzGooglePic():
+    try:
+        content = request.json.get('content')
+    except Exception as e:
+        print(f"Error while parsing JSON: {e}")
+        return jsonify({"error": "Failed to parse the JSON object in the request body"}), 400
+
+    if content:
+        # 调用chatWiteAi函数
+        response = chatWiteAi(content)
+        return response
+    else:
+        return jsonify({"error": "Missing 'content' in the request body"}), 400
 
 
 if __name__ == '__main__':
