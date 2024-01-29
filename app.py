@@ -39,13 +39,14 @@ def qzGoogle():
 def qianwen():
     try:
         content = request.json.get('content')
+        print(content)
     except Exception as e:
         print(f"Error while parsing JSON: {e}")
         return jsonify({"error": "Failed to parse the JSON object in the request body"}), 400
 
     if content:
         # 调用chatWiteAi函数
-        response = call_with_prompt(content)
+        response = call_with_messages(content)
         return response
     else:
         return jsonify({"error": "Missing 'content' in the request body"}), 400

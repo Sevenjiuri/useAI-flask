@@ -20,7 +20,7 @@ def call_with_prompt(prompt):
 
         print(response.output)  # The output text
         print(response.usage)  # The usage information
-        return response.output
+        return response.output.text
     else:
         print(response.code)  # The error code.
         print(response.message)  # The error message.
