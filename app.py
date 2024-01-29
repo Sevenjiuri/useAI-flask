@@ -1,4 +1,6 @@
 from flask import Flask, request, jsonify
+
+from aliyun.Aliprompt import call_with_prompt
 from googleai.chatWithgoogle import chatWiteAi
 from aliyun.chatAliyun import call_with_messages
 from palu.palu import creatpalu
@@ -23,10 +25,15 @@ def qzGoogle():
 
     if content:
         # 调用chatWiteAi函数
-        response = chatWiteAi(content)
-        return response
+        try:
+            response = chatWiteAi(content)
+            return response
+        except Exception as e:
+
+             return jsonify({"error": "Failed to parse the JSON object in the request body"}), 400
     else:
         return jsonify({"error": "Missing 'content' in the request body"}), 400
+
 
 @app.route('/v1/qianwen', methods=['POST'])
 def qianwen():
@@ -38,10 +45,12 @@ def qianwen():
 
     if content:
         # 调用chatWiteAi函数
-        response = call_with_messages(content)
+        response = call_with_prompt(content)
         return response
     else:
         return jsonify({"error": "Missing 'content' in the request body"}), 400
+
+
 @app.route('/v1/createPic', methods=['POST'])
 def qzGooglePic():
     try:
@@ -57,11 +66,14 @@ def qzGooglePic():
     else:
         return jsonify({"error": "Missing 'content' in the request body"}), 400
 
+
 @app.route('/v1/palu', methods=['POST'])
 def palu():
     creatpalu('开服')
 
     return 'success'
+
+
 if __name__ == '__main__':
     # 运行应用
     app.run(debug=True)

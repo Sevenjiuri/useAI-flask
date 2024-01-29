@@ -16,4 +16,5 @@ def creatpalu(content):
     subprocess.Popen([executable_path])
 
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
+    subprocess.Popen([executable_path])
