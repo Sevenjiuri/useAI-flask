@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 
 from aliyun.Aliprompt import call_with_prompt
 from googleai.chatWithgoogle import chatWiteAi
-from aliyun.chatAliyun import call_with_messages
+from aliyun.chatAliyun import call_with_messages, createPic_messages
 from palu.palu import creatpalu
 
 # 初始化Flask应用
@@ -56,14 +56,17 @@ def qianwen():
 def qzGooglePic():
     try:
         content = request.json.get('content')
+        print(content)
     except Exception as e:
         print(f"Error while parsing JSON: {e}")
         return jsonify({"error": "Failed to parse the JSON object in the request body"}), 400
 
     if content:
         # 调用chatWiteAi函数
-        response = chatWiteAi(content)
-        return response
+        # response = chatWiteAi(content)
+        url = createPic_messages(content)
+        print(url)
+        return url
     else:
         return jsonify({"error": "Missing 'content' in the request body"}), 400
 

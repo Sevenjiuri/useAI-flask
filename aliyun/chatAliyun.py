@@ -1,7 +1,11 @@
 import os
 import random
 from http import HTTPStatus
+from urllib.parse import urlparse, unquote
+from http import HTTPStatus
 import dashscope
+import requests
+from pathlib import PurePosixPath
 
 dashscope.api_key_file_path = './key'
 # 设置环境变量
@@ -30,5 +34,30 @@ def call_with_messages(messages):
         return '出现未知错误，切换其他模型试试'
 
 
+def createPic_messages(prompts):
+    # model = "stable-diffusion-xl"
+    model = "wanx-v1"
+    prompt = "Eagle flying freely in th e blue sky and white clouds"
+    if prompts:
+        prompt = prompts
+    rsp = dashscope.ImageSynthesis.call(model=model,
+                                        prompt=prompt,
+                                        negative_prompt="garfield",
+                                        n=1,
+                                        size='1024*1024')
+    if rsp.status_code == HTTPStatus.OK:
+        print(rsp.output)
+        print(rsp.usage)
+        # save file to current directory
+        for result in rsp.output.results:
+            file_name = PurePosixPath(unquote(urlparse(result.url).path)).parts[-1]
+            with open('./%s' % file_name, 'wb+') as f:
+                f.write(requests.get(result.url).content)
+                return result.url
+    else:
+        print('Failed, status_code: %s, code: %s, message: %s' %
+              (rsp.status_code, rsp.code, rsp.message))
+
+
 if __name__ == '__main__':
-    call_with_messages()
+    createPic_messages('西门庆暴打镇关西')
